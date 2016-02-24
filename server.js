@@ -32,6 +32,9 @@ app.get('/', function(req, res){
   res.render('firstpage');
 });
 
+app.get('/:category', function(req, res){
+  res.render('places-things', {category: req.params.category});
+});
 
 app.listen(PORT, function(req, res){
   console.log("Listening to port %s", PORT);
