@@ -10,17 +10,27 @@ var sequelize = require('sequelize');
 
 //Handlebars
 var expressHandlebars = require('express-handlebars');
-app.engine('handlebars', expressHandlebars({
-  defaultLayout: 'main'
-}));
+app.engine('handlebars', expressHandlebars({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 //Body Parser
+
 var bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
+app.use(bodyParser.urlencoded({extended: false}));
+
 //Passport
 var passport = require('passport');
 var passportLocal = require('passport-local');
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/css', express.static("public/css"));
+app.use('/js', express.static("public/js"));
+
+
+app.get('/', function(req, res){
+  res.render('firstpage');
+});
+
+
+app.listen(PORT, function(req, res){
+  console.log("Listening to port %s", PORT);
+});
