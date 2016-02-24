@@ -1,26 +1,36 @@
 //Express
 var express = require('express');
-var app = express()
+var app = express();
 var PORT = process.env.NODE_ENV || 8000;
 //Bcrypt
-var bcrypt = require('bcryptjs')
+var bcrypt = require('bcryptjs');
 //Sequelize
 var sequelize = require('sequelize');
 //!!!! NEED TO ADD DATABASE AND USER TO USE SEQUELIZE
 
 //Handlebars
 var expressHandlebars = require('express-handlebars');
-app.engine('handlebars', expressHandlebars({
-  defaultLayout: 'main'
-}));
+app.engine('handlebars', expressHandlebars({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 //Body Parser
-var bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
+
 //Passport
 var passport = require('passport');
 var passportLocal = require('passport-local');
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/css', express.static("public/css"));
+app.use('/js', express.static("public/js"));
+
+
+app.get('/', function(req, res){
+  res.render('firstpage');
+});
+
+
+app.listen(PORT, function(req, res){
+  console.log("Listening to port %s", PORT);
+});

@@ -1,0 +1,16 @@
+nav {
+  background-color: #8E1011;
+}
+
+nav .brand-logo {
+  margin-left: 20px;
+}
+
+form{
+  margin-left: 10px;
+  width: 100px;
+}
+
+.card-panel {
+  background-color: #f5f3ec;
+}
