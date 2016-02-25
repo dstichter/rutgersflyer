@@ -9,7 +9,9 @@ var Sequelize = require('sequelize');
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 console.log(process.env.DATABASE_URL)
-var sequelize = new Sequelize(process.env.DATABASE_URL);
+var sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres'
+});
 //postgres
 var pg = require('pg');
 //Handlebars
