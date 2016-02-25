@@ -7,7 +7,7 @@ var bcrypt = require('bcryptjs');
 //Sequelize
 var Sequelize = require('sequelize');
 //'postgres://postgres:password@localhost/rutgersflyer'
-require('dotenv').config();
+require('dotenv').config({silent:true});
 console.log(process.env.DATABASE_URL)
 var sequelize = new Sequelize(process.env.DATABASE_URL);
 //postgres
