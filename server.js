@@ -13,14 +13,20 @@ var Sequelize = require('sequelize');
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 console.log(process.env.DATABASE_URL)
-// var sequelize = new Sequelize(process.env.DATABASE_URL, {
-//   host: 'localhost',
-//   dialect: 'postgres'
-// });
-var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
-  host: process.env.DB_HOST,
-  dialect: 'postgres'
-})
+  console.log(process.env.PORT)
+if(process.env.PORT){
+  console.log(process.env.PORT)
+  var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
+    host: process.env.DB_HOST,
+    dialect: 'postgres'
+  })
+}
+else{
+  var sequelize = new Sequelize(process.env.DATABASE_URL, {
+    host: 'localhost',
+    dialect: 'postgres'
+  });
+}
 //postgres
 //var pg = require('pg');
 //Handlebars
