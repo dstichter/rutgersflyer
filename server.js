@@ -10,7 +10,7 @@ var bcrypt = require('bcryptjs');
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize('postgres://postgres:password@localhost/rutgersflyer');
 //postgres
-var pg = require('pg');
+//var pg = require('pg');
 //Handlebars
 var expressHandlebars = require('express-handlebars');
 app.engine('handlebars', expressHandlebars({defaultLayout: 'main'}));
@@ -28,8 +28,9 @@ app.use(passport.session());
 //Static Css / JS
 app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
+
 //Sequelize Define
-var User = sequelize.define('User', {
+/*var User = sequelize.define('User', {
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
   email: {
@@ -48,7 +49,7 @@ var User = sequelize.define('User', {
 		}
 	}
 });
-
+*/
 
 User.findAll({firstname: 'David'}).then(function(results){
   console.log(results)
@@ -64,6 +65,11 @@ app.get('/', function(req, res){
 app.get('/:category', function(req, res){
   res.render('places-things', {category: req.params.category});
 });
+
+app.get('/login', function(req, res){
+  res.render('login', {login: req.params.login});
+});
+
 
 sequelize.sync().then(function() {
   app.listen(PORT, function() {
