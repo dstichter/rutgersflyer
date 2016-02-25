@@ -14,7 +14,7 @@ console.log(process.env.DATABASE_URL)
 //   dialect: 'postgres'
 // });
 var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
-  host: 'localhost',
+  host: process.env.DB_HOST,
   dialect: 'postgres'
 })
 //postgres
