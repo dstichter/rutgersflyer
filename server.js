@@ -1,14 +1,26 @@
 //Express
 var express = require('express');
 var app = express();
-var PORT = process.env.NODE_ENV || 8000;
+
+var PORT = process.env.PORT || 8000;
 
 //Bcrypt
 var bcrypt = require('bcryptjs');
 
 //Sequelize
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('postgres://postgres:password@localhost/rutgersflyer');
+
+//'postgres://postgres:password@localhost/rutgersflyer'
+require('dotenv').config({silent:true});
+console.log(process.env.DATABASE_URL)
+// var sequelize = new Sequelize(process.env.DATABASE_URL, {
+//   host: 'localhost',
+//   dialect: 'postgres'
+// });
+var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
+  host: process.env.DB_HOST,
+  dialect: 'postgres'
+})
 //postgres
 //var pg = require('pg');
 //Handlebars
@@ -30,7 +42,7 @@ app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
 
 //Sequelize Define
-/*var User = sequelize.define('User', {
+var User = sequelize.define('User', {
   firstname: Sequelize.STRING,
   lastname: Sequelize.STRING,
   email: {
@@ -49,13 +61,10 @@ app.use('/js', express.static("public/js"));
 		}
 	}
 });
-*/
 
 User.findAll({firstname: 'David'}).then(function(results){
   console.log(results)
 })
-
-
 
 
 app.get('/', function(req, res){
