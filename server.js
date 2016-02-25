@@ -52,12 +52,12 @@ var User = sequelize.define('User', {
 	}
 });
 
-User.create({
-  firstname: 'david',
-  lastname: 'stichter',
-  email: 'test@gmail.com',
-  password: 'password'
-})
+// User.create({
+//   firstname: 'david',
+//   lastname: 'stichter',
+//   email: 'test@gmail.com',
+//   password: 'password'
+// })
 
 
 
