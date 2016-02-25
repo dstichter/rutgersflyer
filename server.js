@@ -1,7 +1,7 @@
 //Express
 var express = require('express');
 var app = express();
-var PORT = process.env.NODE_ENV || 8000;
+var PORT = process.env.PORT || 8000;
 //Bcrypt
 var bcrypt = require('bcryptjs');
 //Sequelize
