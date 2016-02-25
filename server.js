@@ -6,7 +6,10 @@ var PORT = process.env.NODE_ENV || 8000;
 var bcrypt = require('bcryptjs');
 //Sequelize
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('postgres://postgres:password@localhost/rutgersflyer');
+//'postgres://postgres:password@localhost/rutgersflyer'
+require('dotenv').config();
+console.log(process.env.DATABASE_URL)
+var sequelize = new Sequelize(process.env.DATABASE_URL);
 //postgres
 var pg = require('pg');
 //Handlebars
