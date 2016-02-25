@@ -50,11 +50,12 @@ var User = sequelize.define('User', {
 	}
 });
 
-
-User.findAll({firstname: 'David'}).then(function(results){
-  console.log(results)
+User.create({
+  firstname: 'david',
+  lastname: 'stichter',
+  email: 'test@gmail.com',
+  password: 'password'
 })
-
 
 
 
