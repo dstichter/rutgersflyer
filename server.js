@@ -103,11 +103,37 @@ User.findAll({firstname: 'David'}).then(function(results){
 
 //page rendering
 app.get('/', function(req, res){
-  res.render('firstpage');
+  res.render('firstpage', {firstDisplay: false, msg: req.query.msg});
 });
 
 app.get('/find/:category', function(req, res){
-  res.render('firstpage', {category: req.params.category});
+
+  Business.findAll({
+    where: {
+      category: req.params.category
+    }
+  }).then(function(business){
+    Review.findAll({
+      where: {
+        BusinessId: business[0].dataValues.id
+      }
+    }).then(function(reviews){
+      res.render('firstpage', {
+        category: req.params.category,
+        rating: reviews[0].dataValues.rating,
+        reviews: reviews[0].dataValues.message,
+        name: business[0].dataValues.name,
+        firstDisplay: true
+      });
+    }).catch(function(err) {
+      console.log(err);
+      res.redirect('/');
+    });
+  }).catch(function(err) {
+    console.log(err);
+    res.redirect('/');
+  });
+
 });
 
 app.get('/:category', function(req, res){
