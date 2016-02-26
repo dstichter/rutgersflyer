@@ -150,7 +150,7 @@ app.get('/find/:category', function(req, res){
 });
 
 
-app.get('/:category', function(req, res){
+app.get('/places-things/:category', function(req, res){
   res.render('places-things', {category: req.params.category});
 });
 
