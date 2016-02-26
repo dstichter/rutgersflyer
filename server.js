@@ -12,7 +12,6 @@ var Sequelize = require('sequelize');
 //postgres
 var pg = require('pg');
 
-
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
@@ -83,7 +82,6 @@ var User = sequelize.define('User', {
   }
 });
 
-
 var Review = sequelize.define('Reviews', {
   message: {
     type: Sequelize.STRING
@@ -93,31 +91,36 @@ var Review = sequelize.define('Reviews', {
   }
 });
 
-
 var Business = sequelize.define('Businesses', {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING, 
+    allowNull: false,
   },
   category: {
+    type: Sequelize.STRING
+  },
+  address: {
+    type: Sequelize.STRING
+  },
+  phone_number: {
+    type: Sequelize.INTEGER
+  },
+  web_site: {
     type: Sequelize.STRING
   }
 });
 
-
 User.belongsToMany(Business, {through: Review});
 Business.belongsToMany(User, {through: Review});
-
 
 User.findAll({firstname: 'David'}).then(function(results){
   console.log(results)
 })
 
-
 //page rendering
 app.get('/', function(req, res){
   res.render('firstpage', {firstDisplay: false, msg: req.query.msg});
 });
-
 
 app.get('/find/:category', function(req, res){
 
@@ -180,5 +183,5 @@ sequelize.sync().then(function() {
   app.listen(PORT, function () {
     console.log("Listening on:" + PORT)
   });
-
 });
+
