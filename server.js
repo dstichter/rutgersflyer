@@ -57,8 +57,12 @@ app.use('/js', express.static("public/js"));
 
 //Sequelize Define
 var User = sequelize.define('User', {
-  firstname: Sequelize.STRING,
-  lastname: Sequelize.STRING,
+  firstname: {
+    type: Sequelize.STRING
+  },
+  lastname: {
+    type: Sequelize.STRING
+  },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -71,22 +75,43 @@ var User = sequelize.define('User', {
 			len: {
 				args: [8,32],
 				msg: "Your password must be between 8-32 characters"
-			},
+			}
 		}
 	}
 });
 
-// User.create({
-//   firstname: 'david',
-//   lastname: 'stichter',
-//   email: 'test@gmail.com',
-//   password: 'password'
-// })
 
+var Review = sequelize.define('Reviews', {
+  message: {
+    type: Sequelize.STRING
+  },
+  rating: {
+    type: Sequelize.INTEGER
+  }
+});
+
+
+var Business = sequelize.define('Businesses', {
+  name: {
+    type: Sequelize.STRING
+  },
+  category: {
+    type: Sequelize.STRING
+  }
+});
+
+
+User.belongsToMany(Business, {through: Review});
+Business.belongsToMany(User, {through: Review});
 
 
 app.get('/', function(req, res){
   res.render('firstpage');
+});
+
+
+app.get('/find/:category', function(req, res){
+  res.render('firstpage', {category: req.params.category});
 });
 
 
@@ -100,12 +125,24 @@ app.get('/:category/:location', function(req, res){
 });
 
 
-app.get('/:category/:location', function(req, res){
-  res.render('displayInfo');
-});
-
-
 sequelize.sync().then(function() {
+
+  //Testing the database
+  User.create({
+    firstname: 'david',
+    lastname: 'stichter',
+    email: 'test@gmail.com',
+    password: 'password'
+  }).then(function(user){
+    return Business.create({
+      name: 'Qdoba',
+      category: 'Restaurant'
+    }).then(function(business){
+      user.addBusiness(business,{message: 'Great food', rating: 5});
+    });
+  });
+
+
   app.listen(PORT, function() {
       console.log("Listening on:" + PORT)
   });
