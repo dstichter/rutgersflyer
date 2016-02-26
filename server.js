@@ -10,6 +10,9 @@ var bcrypt = require('bcryptjs');
 //Sequelize
 var Sequelize = require('sequelize');
 
+//postgres
+var pg = require('pg');
+
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
@@ -31,23 +34,11 @@ if(process.env.PORT) {
 }
 
 
-//postgres
-<<<<<<< HEAD
-//var pg = require('pg');
-=======
-var pg = require('pg');
-
-
->>>>>>> bb7afd2b3fd1265876704b23e64df3148beb2b95
 //Handlebars
 var expressHandlebars = require('express-handlebars');
 app.engine('handlebars', expressHandlebars({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-<<<<<<< HEAD
-=======
-
->>>>>>> bb7afd2b3fd1265876704b23e64df3148beb2b95
 //Body Parser
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
@@ -64,10 +55,6 @@ app.use(passport.session());
 app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
 
-<<<<<<< HEAD
-=======
-
->>>>>>> bb7afd2b3fd1265876704b23e64df3148beb2b95
 //Sequelize Define
 var User = sequelize.define('User', {
   firstname: {
@@ -93,11 +80,11 @@ var User = sequelize.define('User', {
 	}
 });
 
-<<<<<<< HEAD
+
 User.findAll({firstname: 'David'}).then(function(results){
   console.log(results)
 })
-=======
+
 
 var Review = sequelize.define('Reviews', {
   message: {
@@ -121,9 +108,9 @@ var Business = sequelize.define('Businesses', {
 
 User.belongsToMany(Business, {through: Review});
 Business.belongsToMany(User, {through: Review});
->>>>>>> bb7afd2b3fd1265876704b23e64df3148beb2b95
 
 
+//page rendering
 app.get('/', function(req, res){
   res.render('firstpage');
 });
@@ -138,15 +125,9 @@ app.get('/:category', function(req, res){
   res.render('places-things', {category: req.params.category});
 });
 
-<<<<<<< HEAD
+
 app.get('/login', function(req, res){
   res.render('login', {login: req.params.login});
-=======
-
-app.get('/:category/:location', function(req, res){
-  res.render('displayInfo');
->>>>>>> bb7afd2b3fd1265876704b23e64df3148beb2b95
-});
 
 
 sequelize.sync().then(function() {
