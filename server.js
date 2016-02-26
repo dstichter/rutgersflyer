@@ -93,9 +93,19 @@ var Review = sequelize.define('Reviews', {
 
 var Business = sequelize.define('Businesses', {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING, 
+    allowNull: false,
   },
   category: {
+    type: Sequelize.STRING
+  },
+  address: {
+    type: Sequelize.STRING
+  },
+  phone_number: {
+    type: Sequelize.INTEGER
+  },
+  web_site: {
     type: Sequelize.STRING
   }
 });
