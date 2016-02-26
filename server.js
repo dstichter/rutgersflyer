@@ -1,7 +1,6 @@
 //Express
 var express = require('express');
 var app = express();
-
 var PORT = process.env.PORT || 8000;
 
 //Bcrypt
@@ -13,11 +12,14 @@ var Sequelize = require('sequelize');
 //postgres
 var pg = require('pg');
 
+
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
+
 console.log(process.env.DATABASE_URL);
 console.log(process.env.PORT);
+
 
 if(process.env.PORT) {
   console.log(process.env.PORT)
@@ -32,14 +34,17 @@ if(process.env.PORT) {
   });
 }
 
+
 //Handlebars
 var expressHandlebars = require('express-handlebars');
 app.engine('handlebars', expressHandlebars({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+
 //Body Parser
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
+
 
 //Passport
 var passport = require('passport');
@@ -47,9 +52,11 @@ var passportLocal = require('passport-local');
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 //Static Css / JS
 app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
+
 
 //Sequelize Define models
 var User = sequelize.define('User', {
@@ -65,16 +72,17 @@ var User = sequelize.define('User', {
     unique: true
   },
 	password: {
-		type: Sequelize.STRING,
-		allowNull: false,
-		validate: {
-			len: {
-				args: [8,32],
-				msg: "Your password must be between 8-32 characters"
-			}
-		}
-	}
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      len: {
+        args: [8, 32],
+        msg: "Your password must be between 8-32 characters"
+      }
+    }
+  }
 });
+
 
 var Review = sequelize.define('Reviews', {
   message: {
@@ -85,6 +93,7 @@ var Review = sequelize.define('Reviews', {
   }
 });
 
+
 var Business = sequelize.define('Businesses', {
   name: {
     type: Sequelize.STRING
@@ -94,17 +103,21 @@ var Business = sequelize.define('Businesses', {
   }
 });
 
+
 User.belongsToMany(Business, {through: Review});
 Business.belongsToMany(User, {through: Review});
+
 
 User.findAll({firstname: 'David'}).then(function(results){
   console.log(results)
 })
 
+
 //page rendering
 app.get('/', function(req, res){
   res.render('firstpage', {firstDisplay: false, msg: req.query.msg});
 });
+
 
 app.get('/find/:category', function(req, res){
 
@@ -136,31 +149,36 @@ app.get('/find/:category', function(req, res){
 
 });
 
+
 app.get('/:category', function(req, res){
   res.render('places-things', {category: req.params.category});
 });
 
-app.get('/login', function(req, res){
+
+app.get('/login', function(req, res) {
   res.render('login', {login: req.params.login});
+});
+
 
 //Testing the database
 sequelize.sync().then(function() {
+
   User.create({
     firstname: 'david',
     lastname: 'stichter',
     email: 'test@gmail.com',
     password: 'password'
-  }).then(function(user){
+  }).then(function (user) {
     return Business.create({
       name: 'Qdoba',
       category: 'Restaurant'
-    }).then(function(business){
-      user.addBusiness(business,{message: 'Great food', rating: 5});
+    }).then(function (business) {
+      user.addBusiness(business, {message: 'Great food', rating: 5});
     });
+  });
+
+  app.listen(PORT, function () {
+    console.log("Listening on:" + PORT)
+  });
+
 });
-
-
-app.listen(PORT, function() {
-  console.log("Listening on:" + PORT)
-});
-
