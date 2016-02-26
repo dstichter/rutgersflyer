@@ -19,7 +19,6 @@ require('dotenv').config({silent:true});
 console.log(process.env.DATABASE_URL);
 console.log(process.env.PORT);
 
-
 if(process.env.PORT) {
   console.log(process.env.PORT)
   var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
@@ -33,7 +32,6 @@ if(process.env.PORT) {
   });
 }
 
-
 //Handlebars
 var expressHandlebars = require('express-handlebars');
 app.engine('handlebars', expressHandlebars({defaultLayout: 'main'}));
@@ -43,19 +41,17 @@ app.set('view engine', 'handlebars');
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
-
 //Passport
 var passport = require('passport');
 var passportLocal = require('passport-local');
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 //Static Css / JS
 app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
 
-//Sequelize Define
+//Sequelize Define models
 var User = sequelize.define('User', {
   firstname: {
     type: Sequelize.STRING
@@ -80,12 +76,6 @@ var User = sequelize.define('User', {
 	}
 });
 
-
-User.findAll({firstname: 'David'}).then(function(results){
-  console.log(results)
-})
-
-
 var Review = sequelize.define('Reviews', {
   message: {
     type: Sequelize.STRING
@@ -94,7 +84,6 @@ var Review = sequelize.define('Reviews', {
     type: Sequelize.INTEGER
   }
 });
-
 
 var Business = sequelize.define('Businesses', {
   name: {
@@ -105,34 +94,31 @@ var Business = sequelize.define('Businesses', {
   }
 });
 
-
 User.belongsToMany(Business, {through: Review});
 Business.belongsToMany(User, {through: Review});
 
+User.findAll({firstname: 'David'}).then(function(results){
+  console.log(results)
+})
 
 //page rendering
 app.get('/', function(req, res){
   res.render('firstpage');
 });
 
-
 app.get('/find/:category', function(req, res){
   res.render('firstpage', {category: req.params.category});
 });
-
 
 app.get('/:category', function(req, res){
   res.render('places-things', {category: req.params.category});
 });
 
-
 app.get('/login', function(req, res){
   res.render('login', {login: req.params.login});
 
-
+//Testing the database
 sequelize.sync().then(function() {
-
-  //Testing the database
   User.create({
     firstname: 'david',
     lastname: 'stichter',
@@ -145,10 +131,10 @@ sequelize.sync().then(function() {
     }).then(function(business){
       user.addBusiness(business,{message: 'Great food', rating: 5});
     });
-  });
-
-
-  app.listen(PORT, function() {
-      console.log("Listening on:" + PORT)
-  });
 });
+
+
+app.listen(PORT, function() {
+  console.log("Listening on:" + PORT)
+});
+
