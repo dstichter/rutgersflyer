@@ -180,7 +180,7 @@ app.post('/register', function(req,res){
               email: req.body.email,
               password: hashedPassword
             }).then(function(results) {
-              console.log(results);
+              res.redirect('/login')
             })
           })
         })
