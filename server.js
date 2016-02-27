@@ -70,7 +70,7 @@ var User = sequelize.define('User', {
     allowNull: false,
     validate: {
       len: {
-        args: [8, 32],
+        args: [8, 150],
         msg: "Your password must be between 8-32 characters"
       }
     }
@@ -155,24 +155,29 @@ app.get('/login', function(req, res) {
 });
 app.post('/login', function(req,res){
   bcrypt.genSalt(10, function(err, salt) {
-          bcrypt.hash(req.params.password, salt, function(err, hashedPassword) {
+          bcrypt.hash(req.body.password, salt, function(err, hashedPassword) {
+            if(err) throw err
             User.findAll({
-              email: req.params.email,
-              password: hashedPassword
+              where:{
+                email: req.body.email,
+                password: hashedPassword
+              }
             }).then(function(results) {
-              console.log(results);
+              console.log(results[0]);
+              console.log(results[1]);
+              console.log(results[2]);
             })
           })
         })
 })
 app.post('/register', function(req,res){
   bcrypt.genSalt(10, function(err, salt) {
-          bcrypt.hash(req.params.password, salt, function(err, hashedPassword) {
+          bcrypt.hash(req.body.password, salt, function(err, hashedPassword) {
             if(err) throw err
             User.create({
-              firstname: req.params.firstname,
-              lastname: req.params.lastname,git
-              email: req.params.email,
+              firstname: req.body.firstname,
+              lastname: req.body.lastname,
+              email: req.body.email,
               password: hashedPassword
             }).then(function(results) {
               console.log(results);
