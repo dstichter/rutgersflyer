@@ -12,6 +12,11 @@ var Sequelize = require('sequelize');
 //postgres
 var pg = require('pg');
 
+//Yelp
+var Yelp = require('yelp');
+var myKeys = require("./keys.js");
+var yelp = new Yelp(myKeys.yelpKeys);
+
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
@@ -89,7 +94,7 @@ var Review = sequelize.define('Reviews', {
 var Business = sequelize.define('Businesses', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: false
   },
   category: {
     type: Sequelize.STRING
@@ -171,7 +176,7 @@ app.post('/register', function(req,res){
             if(err) throw err
             User.create({
               firstname: req.params.firstname,
-              lastname: req.params.lastname,git
+              lastname: req.params.lastname,
               email: req.params.email,
               password: hashedPassword
             }).then(function(results) {
@@ -184,7 +189,6 @@ app.post('/register', function(req,res){
 app.get('/info/:name', function(req, res){
   res.render('displayInfo', {name: req.params.name});
 });
-
 
 //Testing the database
 sequelize.sync().then(function() {
