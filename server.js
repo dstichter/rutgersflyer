@@ -181,6 +181,11 @@ app.post('/register', function(req,res){
         })
 })
 
+app.get('/info/:name', function(req, res){
+  res.render('displayInfo', {name: req.params.name});
+});
+
+
 //Testing the database
 sequelize.sync().then(function() {
 
