@@ -158,20 +158,20 @@ app.get('/login', function(req, res) {
 //Testing the database
 sequelize.sync().then(function() {
 
-  // User.create({
-  //   firstname: 'david',
-  //   lastname: 'stichter',
-  //   email: 'test@gmail.com',
-  //   password: 'password'
-  // }).then(function (user) {
-  //   return Business.create({
-  //     name: 'Qdoba',
-  //     category: 'Restaurant'
-  //   }).then(function (business) {
-  //     user.addBusiness(business, {message: 'Great food', rating: 5});
-  //   });
-  // });
-
+  /*User.create({
+    firstname: 'david',
+    lastname: 'stichter',
+    email: 'test@gmail.com',
+    password: 'password'
+  }).then(function (user) {
+    return Business.create({
+      name: 'Qdoba',
+      category: 'Restaurant'
+    }).then(function (business) {
+      user.addBusiness(business, {message: 'Great food', rating: 5});
+    });
+  });
+*/
   app.listen(PORT, function () {
     console.log("Listening on:" + PORT)
   });
