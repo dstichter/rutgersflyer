@@ -171,7 +171,7 @@ app.post('/register', function(req,res){
             if(err) throw err
             User.create({
               firstname: req.params.firstname,
-              lastname: req.params.lastname,
+              lastname: req.params.lastname,git
               email: req.params.email,
               password: hashedPassword
             }).then(function(results) {
