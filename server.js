@@ -16,12 +16,7 @@ var pg = require('pg');
 require('dotenv').config({silent:true});
 
 
-console.log(process.env.DATABASE_URL);
-console.log(process.env.PORT);
-
-
 if(process.env.PORT) {
-  console.log(process.env.PORT)
   var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
     host: process.env.DB_HOST,
     dialect: 'postgres'
@@ -93,7 +88,7 @@ var Review = sequelize.define('Reviews', {
 
 var Business = sequelize.define('Businesses', {
   name: {
-    type: Sequelize.STRING, 
+    type: Sequelize.STRING,
     allowNull: false,
   },
   category: {
@@ -113,9 +108,6 @@ var Business = sequelize.define('Businesses', {
 User.belongsToMany(Business, {through: Review});
 Business.belongsToMany(User, {through: Review});
 
-User.findAll({firstname: 'David'}).then(function(results){
-  console.log(results)
-})
 
 //page rendering
 app.get('/', function(req, res){
@@ -184,4 +176,3 @@ sequelize.sync().then(function() {
     console.log("Listening on:" + PORT)
   });
 });
-
