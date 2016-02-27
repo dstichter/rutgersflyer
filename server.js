@@ -153,7 +153,33 @@ app.get('/places-things/:category', function(req, res){
 app.get('/login', function(req, res) {
   res.render('login', {login: req.params.login});
 });
-
+app.post('/login', function(req,res){
+  bcrypt.genSalt(10, function(err, salt) {
+          bcrypt.hash(req.params.password, salt, function(err, hashedPassword) {
+            User.findAll({
+              email: req.params.email,
+              password: hashedPassword
+            }).then(function(results) {
+              console.log(results);
+            })
+          })
+        })
+})
+app.post('/register', function(req,res){
+  bcrypt.genSalt(10, function(err, salt) {
+          bcrypt.hash(req.params.password, salt, function(err, hashedPassword) {
+            if(err) throw err
+            User.create({
+              firstname: req.params.firstname,
+              lastname: req.params.lastname,
+              email: req.params.email,
+              password: hashedPassword
+            }).then(function(results) {
+              console.log(results);
+            })
+          })
+        })
+})
 
 //Testing the database
 sequelize.sync().then(function() {
