@@ -166,7 +166,7 @@ app.get('/login', function(req, res) {
 //Testing the database
 sequelize.sync().then(function() {
 
-  User.create({
+  /*User.create({
     firstname: 'david',
     lastname: 'stichter',
     email: 'test@gmail.com',
@@ -179,7 +179,7 @@ sequelize.sync().then(function() {
       user.addBusiness(business, {message: 'Great food', rating: 5});
     });
   });
-
+*/
   app.listen(PORT, function () {
     console.log("Listening on:" + PORT)
   });
