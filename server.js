@@ -4,8 +4,11 @@ var app = express();
 var PORT = process.env.PORT || 8000;
 
 //Bcrypt
+var salt
 var bcrypt = require('bcryptjs');
-
+bcrypt.genSalt(10, function(err, saltGen) {
+  salt = saltGen
+})
 //Sequelize
 var Sequelize = require('sequelize');
 
@@ -42,9 +45,60 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 //Passport
 var passport = require('passport');
-var passportLocal = require('passport-local');
+var LocalStrategy = require('passport-local');
 app.use(passport.initialize());
 app.use(passport.session());
+// passport.use(new LocalStrategy(
+//   function(email, password, done) {
+//     console.log('pw: ' + password)
+//     bcrypt.hash(password, salt, function(err, hashedPassword) {
+//       User.findOne({ where:{email: email} }, function (err, user) {
+//         if (err) { return done(err); }
+//         if (!user) { return done(null, false); }
+//         if (!user.verifyPassword(hashedPassword)) { return done(null, false); }
+//         return done(null, user);
+//       });
+//     })
+//   }
+// ));
+passport.use(new LocalStrategy(
+  function(email, password, done) {
+    User.findOne({ where:{email: email} }, function (err, user) {
+      console.log(user);
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
+var login = function login(req, res, next) {
+  console.log(req.body);
+  passport.authenticate('local', function(err, user, info) {
+    console.log(info)
+    console.log(user);
+    if (err) { return next(err); }
+    if (!user) { return next(); }
+
+    req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        return next(null);
+    });
+  })(req, res, next);
+};
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
 
 
 //Static Css / JS
@@ -153,26 +207,28 @@ app.get('/places-things/:category', function(req, res){
 app.get('/login', function(req, res) {
   res.render('login', {login: req.params.login});
 });
-app.post('/login', function(req,res){
-  bcrypt.genSalt(10, function(err, salt) {
-          bcrypt.hash(req.body.password, salt, function(err, hashedPassword) {
-            if(err) throw err
-            User.findAll({
-              where:{
-                email: req.body.email,
-                password: hashedPassword
-              }
-            }).then(function(results) {
-              console.log(results[0]);
-              console.log(results[1]);
-              console.log(results[2]);
-            })
-          })
-        })
+app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                   failureRedirect: '/login'}), function(req,res){
+  // User.findAll({
+  //   where:{
+  //     email: req.body.email,
+  //   }
+  //})
+  // .then(function(results) {
+    // bcrypt.hash(req.body.password ,salt , function(err, compareRes) {
+    //   if(err) throw err
+    //   console.log(results[0].password)
+    //   console.log(compareRes)
+    // })
+  // })
+  res.redirect('/login')
+
 })
+
+
 app.post('/register', function(req,res){
-  bcrypt.genSalt(10, function(err, salt) {
           bcrypt.hash(req.body.password, salt, function(err, hashedPassword) {
+            console.log(hashedPassword)
             if(err) throw err
             User.create({
               firstname: req.body.firstname,
@@ -183,7 +239,6 @@ app.post('/register', function(req,res){
               res.redirect('/login')
             })
           })
-        })
 })
 
 //Testing the database
