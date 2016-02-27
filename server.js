@@ -158,6 +158,7 @@ app.get('/places-things/:category', function(req, res){
 app.get('/login', function(req, res) {
   res.render('login', {login: req.params.login});
 });
+
 app.post('/login', function(req,res){
   bcrypt.genSalt(10, function(err, salt) {
           bcrypt.hash(req.params.password, salt, function(err, hashedPassword) {
