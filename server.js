@@ -2,13 +2,8 @@
 var express = require('express');
 var app = express();
 var PORT = process.env.PORT || 8000;
-
-//Bcrypt
-var salt
 var bcrypt = require('bcryptjs');
-bcrypt.genSalt(10, function(err, saltGen) {
-  salt = saltGen
-})
+
 //Sequelize
 var Sequelize = require('sequelize');
 
@@ -17,7 +12,6 @@ var pg = require('pg');
 
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
-
 
 if(process.env.PORT) {
   var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
@@ -43,61 +37,69 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
 
+//Express session
+app.use(require('express-session')({
+  secret: 'crackalackin',
+  resave: true,
+  saveUninitialized: true,
+  cookie : { secure : false, maxAge : (4 * 60 * 60 * 1000) } // 4 hours
+}));
+
+
 //Passport
 var passport = require('passport');
-var LocalStrategy = require('passport-local');
+var passportLocal = require('passport-local');
 app.use(passport.initialize());
 app.use(passport.session());
-// passport.use(new LocalStrategy(
-//   function(email, password, done) {
-//     console.log('pw: ' + password)
-//     bcrypt.hash(password, salt, function(err, hashedPassword) {
-//       User.findOne({ where:{email: email} }, function (err, user) {
-//         if (err) { return done(err); }
-//         if (!user) { return done(null, false); }
-//         if (!user.verifyPassword(hashedPassword)) { return done(null, false); }
-//         return done(null, user);
-//       });
-//     })
-//   }
-// ));
-passport.use(new LocalStrategy(
-  function(email, password, done) {
-    User.findOne({ where:{email: email} }, function (err, user) {
-      console.log(user);
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+
+
+passport.use(new passportLocal.Strategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true,
+    session: false
+  },
+  function(req, username, password, done){
+
+    if((username === undefined || username === "") || (password === undefined || password === "" )){
+      done(null,false, {message: "Invalid email or password."});
+    }
+
+    //check password in db
+    User.findOne({
+      where: {
+        email: username
       }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
+    }).then(function(user) {
+      //check password against hash
+      if(user){
+
+        bcrypt.compare(password, user.dataValues.password, function(err, success) {
+          if (success) {
+            //if password is correct authenticate the user with cookie
+            done(null, { username: username, firstname: user.dataValues.firstname });
+          } else{
+            done(null, false, {message: "Invalid email or password."});
+          }
+        });
+      } else {
+        done(null, false, {message: "Invalid email or password."});
       }
-      return done(null, user);
+    }).catch(function(err){
+      done(err);
     });
   }
 ));
-var login = function login(req, res, next) {
-  console.log(req.body);
-  passport.authenticate('local', function(err, user, info) {
-    console.log(info)
-    console.log(user);
-    if (err) { return next(err); }
-    if (!user) { return next(); }
 
-    req.logIn(user, function(err) {
-        if (err) { return next(err); }
-        return next(null);
-    });
-  })(req, res, next);
-};
+
+
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  done(null, {email: user.username, firstname: user.firstname});
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user);
-  });
+
+passport.deserializeUser(function(username, done) {
+  done(null, {email: username, firstname: username.firstname});
 });
 
 
@@ -129,7 +131,15 @@ var User = sequelize.define('User', {
       }
     }
   }
+}, {
+  //Bcrypt
+  hooks: {
+    beforeCreate: function(input){
+      input.password = bcrypt.hashSync(input.password, 8);
+    }
+  }
 });
+
 
 var Review = sequelize.define('Reviews', {
   message: {
@@ -140,10 +150,11 @@ var Review = sequelize.define('Reviews', {
   }
 });
 
+
 var Business = sequelize.define('Businesses', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: false
   },
   category: {
     type: Sequelize.STRING
@@ -159,13 +170,19 @@ var Business = sequelize.define('Businesses', {
   }
 });
 
+
 User.belongsToMany(Business, {through: Review});
 Business.belongsToMany(User, {through: Review});
 
 
 //page rendering
 app.get('/', function(req, res){
-  res.render('firstpage', {firstDisplay: false, msg: req.query.msg});
+  if(req.isAuthenticated()){
+    console.log(res.user);
+    res.render('firstpage', {firstDisplay: false, msg: req.query.msg, email: req.user.email, isAuthenticated: req.isAuthenticated(), firstname: req.user.firstname});
+  }else{
+    res.render('firstpage', {firstDisplay: false, msg: req.query.msg, isAuthenticated: req.isAuthenticated()});
+  }
 });
 
 app.get('/find/:category', function(req, res){
@@ -205,41 +222,31 @@ app.get('/places-things/:category', function(req, res){
 
 
 app.get('/login', function(req, res) {
-  res.render('login', {login: req.params.login});
+  res.render('login');
 });
-app.post('/login', passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/login'}), function(req,res){
-  // User.findAll({
-  //   where:{
-  //     email: req.body.email,
-  //   }
-  //})
-  // .then(function(results) {
-    // bcrypt.hash(req.body.password ,salt , function(err, compareRes) {
-    //   if(err) throw err
-    //   console.log(results[0].password)
-    //   console.log(compareRes)
-    // })
-  // })
-  res.redirect('/login')
 
-})
+
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login'
+}));
 
 
 app.post('/register', function(req,res){
-          bcrypt.hash(req.body.password, salt, function(err, hashedPassword) {
-            console.log(hashedPassword)
-            if(err) throw err
-            User.create({
-              firstname: req.body.firstname,
-              lastname: req.body.lastname,
-              email: req.body.email,
-              password: hashedPassword
-            }).then(function(results) {
-              res.redirect('/login')
-            })
-          })
-})
+
+  User.create({
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    password: req.body.password
+  }).then(function(user) {
+    console.log(user);
+    res.redirect('/login');
+  }).catch(function(err) {
+    console.log(err);
+    res.redirect('/');
+  });
+});
 
 //Testing the database
 sequelize.sync().then(function() {
@@ -261,4 +268,6 @@ sequelize.sync().then(function() {
   app.listen(PORT, function () {
     console.log("Listening on:" + PORT)
   });
+}).catch(function(err){
+  if(err){throw err;}
 });
