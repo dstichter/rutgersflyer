@@ -3,7 +3,7 @@
     <div class="col s12">
       <div class="row">
 
-        <form action="/login" method="post">
+        <form class="col s12" action="/login" method="post">
           <div class="input-field col s6">
             <input id="email" type="text" class="validate" name='email'>
             <label for="email">Email</label>
@@ -16,16 +16,11 @@
           <button class="btn waves-effect waves-light" type="submit" name="action">Login</button>
         </form>
       </div>
-
-      <!--<div class="row">-->
-        <!--<a class="waves-effect waves-light btn">Log In</a>-->
-      <!--</div>-->
     </div>
 
     <div class="col S12">
       <!-- Modal Trigger -->
-      <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Sign Up</a>
-      <button  datatarget='modal1' type="button" id='testButton' name="button">Test Modal</button>
+      <a datatarget='modal1' type="button" id='testButton' name="button" href="#">Need to register? Click here!</a>
 
       <!-- Modal Structure -->
       <div id="modal1" class="modal">

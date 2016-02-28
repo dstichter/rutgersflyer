@@ -10,6 +10,11 @@ var Sequelize = require('sequelize');
 //postgres
 var pg = require('pg');
 
+//Yelp
+var Yelp = require('yelp');
+var myKeys = require("./keys.js");
+var yelp = new Yelp(myKeys.yelpKeys);
+
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
@@ -244,9 +249,10 @@ app.post('/register', function(req,res){
     res.redirect('/login');
   }).catch(function(err) {
     console.log(err);
-    res.redirect('/');
+    res.redirect('/login?msg=Credentials do not work');
   });
 });
+
 
 app.get('/info/:name', function(req, res){
   res.render('displayInfo', {name: req.params.name});
