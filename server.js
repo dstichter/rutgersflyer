@@ -111,6 +111,7 @@ passport.deserializeUser(function(username, done) {
 //Static Css / JS
 app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
+app.use('/images', express.static("public/images"));
 
 
 //Sequelize Define models
