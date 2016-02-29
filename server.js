@@ -22,7 +22,7 @@ if(process.env.PORT) {
     dialect: 'postgres'
   })
 }else {
-  var sequelize = new Sequelize(process.env.DATABASE_URL, {
+  var sequelize = new Sequelize(process.env.DATABASE_URL, "root", {
     host: 'localhost',
     dialect: 'postgres'
   });
@@ -153,6 +153,7 @@ app.get('/places-things/:category', function(req, res){
 app.get('/login', function(req, res) {
   res.render('login', {login: req.params.login});
 });
+
 app.post('/login', function(req,res){
   bcrypt.genSalt(10, function(err, salt) {
           bcrypt.hash(req.params.password, salt, function(err, hashedPassword) {
@@ -171,7 +172,7 @@ app.post('/register', function(req,res){
             if(err) throw err
             User.create({
               firstname: req.params.firstname,
-              lastname: req.params.lastname,git
+              lastname: req.params.lastname,
               email: req.params.email,
               password: hashedPassword
             }).then(function(results) {
@@ -188,21 +189,6 @@ app.get('/info/:name', function(req, res){
 
 //Testing the database
 sequelize.sync().then(function() {
-
-  // User.create({
-  //   firstname: 'david',
-  //   lastname: 'stichter',
-  //   email: 'test@gmail.com',
-  //   password: 'password'
-  // }).then(function (user) {
-  //   return Business.create({
-  //     name: 'Qdoba',
-  //     category: 'Restaurant'
-  //   }).then(function (business) {
-  //     user.addBusiness(business, {message: 'Great food', rating: 5});
-  //   });
-  // });
-
   app.listen(PORT, function () {
     console.log("Listening on:" + PORT)
   });

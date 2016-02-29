@@ -23,8 +23,7 @@
     </div>
     <div class="col S12">
         <!-- Modal Trigger -->
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Sign Up</a>
-  <button  datatarget='modal1' type="button" id='testButton' name="button">Test Modal</button>
+  <button class="waves-effect waves-light btn modal-trigger" datatarget='modal1' type="button" id='testButton' name="button">Sign Up</button>
 
   <!-- Modal Structure -->
   <div id="modal1" class="modal">
@@ -45,25 +44,19 @@
 
           <div class="row">
             <div class="input-field col s6">
-              <input id="user_name" type="text" class="validate">
-              <label for="user_name">User Name</label>
+              <input id="email" type="email" class="validate" name='email'>
+              <label for="email" data-error="Enter a valid Email address">Email</label>
             </div>
             <div class="input-field col s6">
               <input id="password" type="password" class="validate" name='password'>
               <label for="password">Password</label>
             </div>
           </div>
-
-          <div class="row">
-            <div class="input-field col s12">
-              <input id="email" type="email" class="validate" name='email'>
-              <label for="email" data-error="Enter a valid Email address">Email</label>
-            </div>
-          </div>
         </form>
     </div>
     <div class="modal-footer">
       <a action='/register' href="#!" type="submit" class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+      <a action='/' href="#!" type="submit" class=" modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
     </div>
   </div>
     </div>
