@@ -38,11 +38,6 @@ form{
   padding-left: 3%;
 }
 
-
-#fifthrowimage{
-  padding-left: 3%;
-}
-
 .hovereffect {
   float:left;
   overflow:hidden;
@@ -129,4 +124,24 @@ form{
   transition-delay:.2s;
 }
 
+body{
+  background-color: #F5F3EC;
+}
 
+h4{
+  padding-left: 5%;
+}
+
+#myfooter{
+  background-color: #333333;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
