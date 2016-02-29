@@ -22,3 +22,35 @@ form{
 .display-reviews{
   margin-top: 6%;
 }
+
+#firstimage{
+  margin-left: -1%;
+}
+
+#firstimage img{
+  width: 102%;
+  height: 70%;
+}
+
+#secondimages{
+  margin-left: -4%;
+}
+
+#secondimages img{
+  width: 115%;
+  height: 35%;
+}
+
+#thirdimage{
+  margin-left: -4%;
+  margin-top: -4%;
+}
+
+#thirdimage img{
+  width: 115%;
+  height: 35%;
+}
+
+#firstimage img a:hover{
+  opacity: .5;
+}

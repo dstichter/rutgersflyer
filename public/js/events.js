@@ -3,7 +3,10 @@
  */
 $(document).ready(function() {
   $('select').material_select();
+
   $('#testButton').on('click',function(){
     $('#modal1').openModal()
   })
+
+
 });
