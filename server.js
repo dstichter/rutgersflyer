@@ -191,35 +191,35 @@ app.get('/', function(req, res){
   }
 });
 
-app.get('/find/:category', function(req, res){
-
-  Business.findAll({
-    where: {
-      category: req.params.category
-    }
-  }).then(function(business){
-    Review.findAll({
-      where: {
-        BusinessId: business[0].dataValues.id
-      }
-    }).then(function(reviews){
-      res.render('firstpage', {
-        category: req.params.category,
-        rating: reviews[0].dataValues.rating,
-        reviews: reviews[0].dataValues.message,
-        name: business[0].dataValues.name,
-        firstDisplay: true
-      });
-    }).catch(function(err) {
-      console.log(err);
-      res.redirect('/');
-    });
-  }).catch(function(err) {
-    console.log(err);
-    res.redirect('/');
-  });
-
-});
+//app.get('/find/:category', function(req, res){
+//
+//  Business.findAll({
+//    where: {
+//      category: req.params.category
+//    }
+//  }).then(function(business){
+//    Review.findAll({
+//      where: {
+//        BusinessId: business[0].dataValues.id
+//      }
+//    }).then(function(reviews){
+//      res.render('firstpage', {
+//        category: req.params.category,
+//        rating: reviews[0].dataValues.rating,
+//        reviews: reviews[0].dataValues.message,
+//        name: business[0].dataValues.name,
+//        firstDisplay: true
+//      });
+//    }).catch(function(err) {
+//      console.log(err);
+//      res.redirect('/');
+//    });
+//  }).catch(function(err) {
+//    console.log(err);
+//    res.redirect('/');
+//  });
+//
+//});
 
 
 app.get('/places-things/:category', function(req, res){
