@@ -8,5 +8,9 @@ $(document).ready(function() {
     $('#modal1').openModal()
   })
 
+  $('#loginBUtton').on('click',function(){
+    $('#loginModal').openModal()
+  })
+
 
 });
