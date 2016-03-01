@@ -177,7 +177,6 @@ app.get('/', function(req, res){
   //console.log(req)
   if(req.isAuthenticated()){
 console.log(req.user);
-console.log(req.user.lastname);
     res.render('firstpage', req.user);
   }else{
     res.render('firstpage', {firstDisplay: false, msg: req.query.msg, isAuthenticated: req.isAuthenticated()});
