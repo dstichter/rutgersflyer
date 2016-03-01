@@ -18,17 +18,8 @@ var yelp = new Yelp(myKeys.yelpKeys);
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
-if(process.env.PORT) {
-  var sequelize = new Sequelize(process.env.DB_DB,process.env.DB_USER,process.env.DB_PW, {
-    host: process.env.DB_HOST,
-    dialect: 'postgres'
-  })
-}else {
-  var sequelize = new Sequelize(process.env.DATABASE_URL, "root", {
-    host: 'localhost',
-    dialect: 'postgres'
-  });
-}
+var sequelize = new Sequelize(process.env.DATABASE_URL);
+
 
 
 //Handlebars
