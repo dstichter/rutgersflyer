@@ -18,7 +18,7 @@ var yelp = new Yelp(myKeys.yelpKeys);
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
-//var sequelize = new Sequelize(process.env.DATABASE_URL);
+var sequelize = new Sequelize(process.env.DATABASE_URL);
 
 
 

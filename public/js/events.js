@@ -24,7 +24,7 @@ $(document).ready(function() {
     })
 
   }).click(function(){
-    $('.starHover')
+    $('.starHover').off()
   })
 
 });
