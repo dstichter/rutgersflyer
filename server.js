@@ -24,7 +24,7 @@ if(process.env.PORT) {
     dialect: 'postgres'
   })
 }else {
-  var sequelize = new Sequelize(process.env.DATABASE_URL, {
+  var sequelize = new Sequelize(process.env.DATABASE_URL, "root", {
     host: 'localhost',
     dialect: 'postgres'
   });
@@ -111,6 +111,7 @@ passport.deserializeUser(function(username, done) {
 //Static Css / JS
 app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
+app.use('/images', express.static("public/images"));
 
 
 //Sequelize Define models
@@ -231,10 +232,13 @@ app.get('/places-things/:category', function(req, res){
 app.get('/login', function(req, res) {
   res.render('login');
 });
+
+
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
+
 
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/',
@@ -258,7 +262,6 @@ app.post('/register', function(req,res){
   });
 });
 
-
 app.get('/info/:name', function(req, res){
   res.render('displayInfo', {name: req.params.name});
 });
@@ -266,21 +269,6 @@ app.get('/info/:name', function(req, res){
 
 //Testing the database
 sequelize.sync().then(function() {
-
-  // User.create({
-  //   firstname: 'david',
-  //   lastname: 'stichter',
-  //   email: 'test@gmail.com',
-  //   password: 'password'
-  // }).then(function (user) {
-  //   return Business.create({
-  //     name: 'Qdoba',
-  //     category: 'Restaurant'
-  //   }).then(function (business) {
-  //     user.addBusiness(business, {message: 'Great food', rating: 5});
-  //   });
-  // });
-
   app.listen(PORT, function () {
     console.log("Listening on:" + PORT)
   });
