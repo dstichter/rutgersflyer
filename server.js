@@ -160,7 +160,7 @@ var Business = sequelize.define('Businesses', {
     type: Sequelize.STRING
   },
   phone_number: {
-    type: Sequelize.INTEGER
+    type: Sequelize.DOUBLE
   },
   web_site: {
     type: Sequelize.STRING
@@ -216,7 +216,18 @@ console.log(req.user.lastname);
 
 
 app.get('/places-things/:category', function(req, res){
-  res.render('places-things', {category: req.params.category});
+
+  Business.findAll({
+    where: {
+      category: req.params.category
+    }
+  }).then(function(business){
+    console.log(business);
+    res.render('places-things', {category: req.params.category, businesses: business});
+  }).catch(function(err){
+    console.log(err);
+    res.redirect('/?msg=Error');
+  });
 });
 
 
@@ -255,6 +266,25 @@ app.post('/register', function(req,res){
 
 app.get('/info/:name', function(req, res){
   res.render('displayInfo', {name: req.params.name});
+});
+
+
+app.post('/addingLocation', function(req, res){
+
+  console.log(req.body);
+
+  Business.create({
+    name: req.body.name,
+    category: req.body.category,
+    address: req.body.address,
+    phone_number: req.body.phone_number,
+    web_site: req.body.web_site
+  }).then(function(business){
+    res.render('firstpage');
+  }).catch(function(err){
+    console.log(err);
+    res.redirect('/?msg=Error');
+  });
 });
 
 

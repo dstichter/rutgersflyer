@@ -8,5 +8,8 @@ $(document).ready(function() {
     $('#modal1').openModal()
   })
 
+  $('#addlocationbtn').on('click',function(){
+    $('#modal2').openModal()
+  })
 
 });
