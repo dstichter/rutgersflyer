@@ -23,6 +23,11 @@ form{
   margin-top: 6%;
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+  width: auto;
+}
 
 #firstrowimage{
   margin-left: -1%;

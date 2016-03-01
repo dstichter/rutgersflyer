@@ -18,8 +18,8 @@ var yelp = new Yelp(myKeys.yelpKeys);
 //'postgres://postgres:password@localhost/rutgersflyer'
 require('dotenv').config({silent:true});
 
-var sequelize = new Sequelize(process.env.DATABASE_URL);
 
+var sequelize = new Sequelize(process.env.DATABASE_URL);
 
 
 //Handlebars
@@ -73,7 +73,7 @@ passport.use(new passportLocal.Strategy({
         bcrypt.compare(password, user.dataValues.password, function(err, success) {
           if (success) {
             //if password is correct authenticate the user with cookie
-            done(null, { username: username, firstname: user.dataValues.firstname, lastname: user.dataValues.lastname , isAuthenticated: req.isAuthenticated});
+            done(null, { username: username, firstname: user.dataValues.firstname });
           } else{
             done(null, false, {message: "Invalid email or password."});
           }
@@ -90,19 +90,18 @@ passport.use(new passportLocal.Strategy({
 
 
 passport.serializeUser(function(user, done) {
-  done(null, {email: user.username, firstname: user.firstname, lastname: user.lastname,isAuthenticated: 'true'});
+  done(null, {email: user.username, firstname: user.firstname});
 });
 
 
 passport.deserializeUser(function(username, done) {
-  done(null, {email: username.email, firstname: username.firstname, lastname: username.lastname,isAuthenticated: 'true'});
+  done(null, {email: username, firstname: username.firstname});
 });
 
 
 //Static Css / JS
 app.use('/css', express.static("public/css"));
 app.use('/js', express.static("public/js"));
-app.use('/images', express.static("public/images"));
 
 
 //Sequelize Define models
@@ -160,7 +159,7 @@ var Business = sequelize.define('Businesses', {
     type: Sequelize.STRING
   },
   phone_number: {
-    type: Sequelize.INTEGER
+    type: Sequelize.DOUBLE
   },
   web_site: {
     type: Sequelize.STRING
@@ -174,62 +173,64 @@ Business.belongsToMany(User, {through: Review});
 
 //page rendering
 app.get('/', function(req, res){
-  //console.log(req)
   if(req.isAuthenticated()){
-console.log(req.user);
-console.log(req.user.lastname);
-    res.render('firstpage', req.user);
+    console.log(res.user);
+    res.render('firstpage', {firstDisplay: false, msg: req.query.msg, email: req.user.email, isAuthenticated: req.isAuthenticated(), firstname: req.user.firstname});
   }else{
     res.render('firstpage', {firstDisplay: false, msg: req.query.msg, isAuthenticated: req.isAuthenticated()});
   }
 });
 
-app.get('/find/:category', function(req, res){
+//app.get('/find/:category', function(req, res){
+//
+//  Business.findAll({
+//    where: {
+//      category: req.params.category
+//    }
+//  }).then(function(business){
+//    Review.findAll({
+//      where: {
+//        BusinessId: business[0].dataValues.id
+//      }
+//    }).then(function(reviews){
+//      res.render('firstpage', {
+//        category: req.params.category,
+//        rating: reviews[0].dataValues.rating,
+//        reviews: reviews[0].dataValues.message,
+//        name: business[0].dataValues.name,
+//        firstDisplay: true
+//      });
+//    }).catch(function(err) {
+//      console.log(err);
+//      res.redirect('/');
+//    });
+//  }).catch(function(err) {
+//    console.log(err);
+//    res.redirect('/');
+//  });
+//
+//});
+
+
+app.get('/places-things/:category', function(req, res){
 
   Business.findAll({
     where: {
       category: req.params.category
     }
   }).then(function(business){
-    Review.findAll({
-      where: {
-        BusinessId: business[0].dataValues.id
-      }
-    }).then(function(reviews){
-      res.render('firstpage', {
-        category: req.params.category,
-        rating: reviews[0].dataValues.rating,
-        reviews: reviews[0].dataValues.message,
-        name: business[0].dataValues.name,
-        firstDisplay: true
-      });
-    }).catch(function(err) {
-      console.log(err);
-      res.redirect('/');
-    });
-  }).catch(function(err) {
+    console.log(business);
+    res.render('places-things', {category: req.params.category, businesses: business});
+  }).catch(function(err){
     console.log(err);
-    res.redirect('/');
+    res.redirect('/?msg=Error');
   });
-
-});
-
-
-app.get('/places-things/:category', function(req, res){
-  res.render('places-things', {category: req.params.category});
 });
 
 
 app.get('/login', function(req, res) {
   res.render('login');
 });
-
-
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
-
 
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/',
@@ -257,6 +258,25 @@ app.post('/register', function(req,res){
 
 app.get('/info/:name', function(req, res){
   res.render('displayInfo', {name: req.params.name});
+});
+
+
+app.post('/addingLocation', function(req, res){
+
+  console.log(req.body);
+
+  Business.create({
+    name: req.body.name,
+    category: req.body.category,
+    address: req.body.address,
+    phone_number: req.body.phone_number,
+    web_site: req.body.web_site
+  }).then(function(business){
+    res.render('firstpage');
+  }).catch(function(err){
+    console.log(err);
+    res.redirect('/?msg=Error');
+  });
 });
 
 
