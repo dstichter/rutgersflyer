@@ -16,11 +16,19 @@
     <div class="col s8">
       <div class="card-panel z-depth-3">
         <div class="row">{{name}}</div>
-        <div class="row">* * * * * Review Star</div>
+        <div class="row">
+          <img data-star='1' class='starHover' src="../images/star_empty.png" alt="" />
+          <img data-star='2' class='starHover' src="../images/star_empty.png" alt="" />
+          <img data-star='3' class='starHover' src="../images/star_empty.png" alt="" />
+          <img data-star='4' class='starHover' src="../images/star_empty.png" alt="" />
+          <img data-star='5' class='starHover' src="../images/star_empty.png" alt="" />
+        </div>
+
         <div class="row">
           <form class="col s12">
             <div class="input-field">
-              <input id="input_text" type="text" length="300">
+              <input type="hidden" name="rating" value="">
+              <input id="input_text" type="text" length="300" name='message'>
               <label for="input_text">Review....</label>
             </div>
             <button class="btn waves-effect waves-light" type="submit" name="action">Submit
