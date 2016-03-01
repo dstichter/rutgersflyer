@@ -236,7 +236,9 @@ app.post('/login', passport.authenticate('local', {
   failureRedirect: '/login'
 }));
 
-
+app.post('/postreview', function(req,res){
+  
+})
 app.post('/register', function(req,res){
 
   User.create({
