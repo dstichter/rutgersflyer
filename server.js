@@ -159,7 +159,7 @@ var Business = sequelize.define('Businesses', {
     type: Sequelize.STRING
   },
   phone_number: {
-    type: Sequelize.INTEGER
+    type: Sequelize.DOUBLE
   },
   web_site: {
     type: Sequelize.STRING
@@ -181,39 +181,50 @@ app.get('/', function(req, res){
   }
 });
 
-app.get('/find/:category', function(req, res){
+//app.get('/find/:category', function(req, res){
+//
+//  Business.findAll({
+//    where: {
+//      category: req.params.category
+//    }
+//  }).then(function(business){
+//    Review.findAll({
+//      where: {
+//        BusinessId: business[0].dataValues.id
+//      }
+//    }).then(function(reviews){
+//      res.render('firstpage', {
+//        category: req.params.category,
+//        rating: reviews[0].dataValues.rating,
+//        reviews: reviews[0].dataValues.message,
+//        name: business[0].dataValues.name,
+//        firstDisplay: true
+//      });
+//    }).catch(function(err) {
+//      console.log(err);
+//      res.redirect('/');
+//    });
+//  }).catch(function(err) {
+//    console.log(err);
+//    res.redirect('/');
+//  });
+//
+//});
+
+
+app.get('/places-things/:category', function(req, res){
 
   Business.findAll({
     where: {
       category: req.params.category
     }
   }).then(function(business){
-    Review.findAll({
-      where: {
-        BusinessId: business[0].dataValues.id
-      }
-    }).then(function(reviews){
-      res.render('firstpage', {
-        category: req.params.category,
-        rating: reviews[0].dataValues.rating,
-        reviews: reviews[0].dataValues.message,
-        name: business[0].dataValues.name,
-        firstDisplay: true
-      });
-    }).catch(function(err) {
-      console.log(err);
-      res.redirect('/');
-    });
-  }).catch(function(err) {
+    console.log(business);
+    res.render('places-things', {category: req.params.category, businesses: business});
+  }).catch(function(err){
     console.log(err);
-    res.redirect('/');
+    res.redirect('/?msg=Error');
   });
-
-});
-
-
-app.get('/places-things/:category', function(req, res){
-  res.render('places-things', {category: req.params.category});
 });
 
 
@@ -226,7 +237,9 @@ app.post('/login', passport.authenticate('local', {
   failureRedirect: '/login'
 }));
 
-
+app.post('/postreview', function(req,res){
+  
+})
 app.post('/register', function(req,res){
 
   User.create({
@@ -245,6 +258,25 @@ app.post('/register', function(req,res){
 
 app.get('/info/:name', function(req, res){
   res.render('displayInfo', {name: req.params.name});
+});
+
+
+app.post('/addingLocation', function(req, res){
+
+  console.log(req.body);
+
+  Business.create({
+    name: req.body.name,
+    category: req.body.category,
+    address: req.body.address,
+    phone_number: req.body.phone_number,
+    web_site: req.body.web_site
+  }).then(function(business){
+    res.render('firstpage');
+  }).catch(function(err){
+    console.log(err);
+    res.redirect('/?msg=Error');
+  });
 });
 
 
