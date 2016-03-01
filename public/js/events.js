@@ -2,6 +2,7 @@
  * Created by Ale on 2/23/16.
  */
 $(document).ready(function() {
+  var holdStarValue
   $('select').material_select();
 
   $('#testButton').on('click',function(){
@@ -11,6 +12,11 @@ $(document).ready(function() {
   $('#addlocationbtn').on('click',function() {
     $('#modal2').openModal();
   });
+
+
+  $('#loginBUtton').on('click',function(){
+    $('#loginModal').openModal()
+  })
 
   $('.starHover').mouseenter( function(){
     var holdThis = $(this);
@@ -28,7 +34,11 @@ $(document).ready(function() {
     });
 
   }).click(function(){
-    $('.starHover').off();
-  });
+
+        $('#starRatingInput').attr('value', parseInt($(this).attr('data-star')))
+        $('.starHover').off()
+
+    })
+
 
 });
