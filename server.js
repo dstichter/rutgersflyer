@@ -82,7 +82,7 @@ passport.use(new passportLocal.Strategy({
         bcrypt.compare(password, user.dataValues.password, function(err, success) {
           if (success) {
             //if password is correct authenticate the user with cookie
-            done(null, { username: username, firstname: user.dataValues.firstname });
+            done(null, { username: username, firstname: user.dataValues.firstname, lastname: user.dataValues.lastname , isAuthenticated: req.isAuthenticated});
           } else{
             done(null, false, {message: "Invalid email or password."});
           }
@@ -99,12 +99,12 @@ passport.use(new passportLocal.Strategy({
 
 
 passport.serializeUser(function(user, done) {
-  done(null, {email: user.username, firstname: user.firstname});
+  done(null, {email: user.username, firstname: user.firstname, lastname: user.lastname,isAuthenticated: 'true'});
 });
 
 
 passport.deserializeUser(function(username, done) {
-  done(null, {email: username, firstname: username.firstname});
+  done(null, {email: username.email, firstname: username.firstname, lastname: username.lastname,isAuthenticated: 'true'});
 });
 
 
@@ -182,9 +182,11 @@ Business.belongsToMany(User, {through: Review});
 
 //page rendering
 app.get('/', function(req, res){
+  //console.log(req)
   if(req.isAuthenticated()){
-    console.log(res.user);
-    res.render('firstpage', {firstDisplay: false, msg: req.query.msg, email: req.user.email, isAuthenticated: req.isAuthenticated(), firstname: req.user.firstname});
+console.log(req.user);
+console.log(req.user.lastname);
+    res.render('firstpage', req.user);
   }else{
     res.render('firstpage', {firstDisplay: false, msg: req.query.msg, isAuthenticated: req.isAuthenticated()});
   }
@@ -229,7 +231,10 @@ app.get('/places-things/:category', function(req, res){
 app.get('/login', function(req, res) {
   res.render('login');
 });
-
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/',
