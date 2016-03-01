@@ -76,6 +76,7 @@ passport.use(new passportLocal.Strategy({
             done(null, { username: username, firstname: user.dataValues.firstname, lastname: user.dataValues.lastname , isAuthenticated: req.isAuthenticated});
           } else{
             done(null, false, {message: "Invalid email or password."});
+            //Differance
           }
         });
       } else {
