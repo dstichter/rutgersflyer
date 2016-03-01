@@ -17,8 +17,8 @@
                 <li><a href="/login">{{firstname}} {{lastname}}</a></li>
                 <li><a href="/logout">Logout</a></li>
               {{else}}
-              <li><a href="/login">Login</a></li>
-              <li><a href="#!" id="testButton" datatarger="modal1">Sign Up</a></li>
+              <li><a href="#!" id="loginButton" datatarget="loginModal">Sign In</a></li>
+              <li><a href="#!" id="testButton" datatarget="modal1">Sign Up</a></li>
               {{/if}}
             </ul>
           </div>
@@ -30,104 +30,75 @@
       {{{ body }}}
     </main>
 
-<div class = "container">
-  <div class="row">
-    <div class="col s12">
+    <!--login/register modals-->
+    <div class = "container">
       <div class="row">
-
-        <form class="col s12" action="/login" method="post">
-          <div class="input-field col s6">
-            <input id="email" type="text" class="validate" name='email'>
-            <label for="email">Email</label>
-          </div>
-
-          <div class="input-field col s6">
-            <input id="password" type="password" class="validate" name='password'>
-            <label for="password">Password</label>
-          </div>
-          <button class="btn waves-effect waves-light" type="submit" name="action">Login</button>
-        </form>
-      </div>
-    </div>
-
+        <!--modal for login-->
         <div class="col S12">
-      <!-- Modal Trigger -->
-   
-      <!-- Modal Structure -->
-      <div id="modal1" class="modal">
-        <div class="modal-content">
-          <h4>User Registration</h4>
-          <form class="col s12" action="/register" method="post">
-            <div class="row">
+          <!-- Modal Trigger -->
+          <a datatarget='loginModal' type="button" id='loginButton' name="button" href="#">Sign In</a>
+
+          <!-- Modal Structure -->
+          <div id="loginModal" class="modal">
+            <div class="modal-content">
+              <h4>Log In</h4>
+              <form class="col s12" action="/login" method="post">
               <div class="input-field col s6">
-                <input id="first_name" type="text" class="validate" name='firstname'>
-                <label for="first_name">First Name</label>
+                <input id="email" type="text" class="validate" name='email'>
+                <label for="email">Email</label>
               </div>
+
               <div class="input-field col s6">
-                <input id="last_name" type="text" class="validate" name='lastname'>
-                <label for="last_name">Last Name</label>
+                <input id="password" type="password" class="validate" name='password'>
+                <label for="password">Password</label>
               </div>
+              <button class="btn waves-effect waves-light" type="submit" name="action">Login</button>
+            </form>
             </div>
 
-            <div class="row">
-              <div class="input-field col s6">
-                <input id="email" type="email" class="validate" name='email'>
-                <label for="email" data-error="Enter a valid Email address">Email</label>
-              </div>
-            </div>
-            <div class="input-field col s6">
-              <input id="password" type="password" class="validate" name='password'>
-              <label for="password">Password</label>
-            </div>
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
-          </form>
+            <div class="modal-footer"></div>
+          </div>
         </div>
 
-        <div class="modal-footer"></div>
-      </div>
-    </div>
+        <!--modal for registration-->
+        <div class="col S12">
+            <!-- Modal Trigger -->
+            <a datatarget='modal1' type="button" id='testButton' name="button" href="#">Need to register? Click here!</a>
 
-    <div class="col S12">
-      <!-- Modal Trigger -->
-      <a datatarget='modal1' type="button" id='testButton' name="button" href="#">Need to register? Click here!</a>
+            <!-- Modal Structure -->
+            <div id="modal1" class="modal">
+              <div class="modal-content">
+                <h4>User Registration</h4>
+                <form class="col s12" action="/register" method="post">
+                  <div class="row">
+                    <div class="input-field col s6">
+                      <input id="first_name" type="text" class="validate" name='firstname'>
+                      <label for="first_name">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input id="last_name" type="text" class="validate" name='lastname'>
+                      <label for="last_name">Last Name</label>
+                    </div>
+                  </div>
 
-      <!-- Modal Structure -->
-      <div id="modal1" class="modal">
-        <div class="modal-content">
-          <h4>User Registration</h4>
-          <form class="col s12" action="/register" method="post">
-            <div class="row">
-              <div class="input-field col s6">
-                <input id="first_name" type="text" class="validate" name='firstname'>
-                <label for="first_name">First Name</label>
-              </div>
-              <div class="input-field col s6">
-                <input id="last_name" type="text" class="validate" name='lastname'>
-                <label for="last_name">Last Name</label>
+                  <div class="row">
+                    <div class="input-field col s6">
+                      <input id="email" type="email" class="validate" name='email'>
+                      <label for="email" data-error="Enter a valid Email address">Email</label>
+                    </div>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="password" type="password" class="validate" name='password'>
+                    <label for="password">Password</label>
+                  </div>
+                  <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+                </form>
               </div>
             </div>
-
-            <div class="row">
-              <div class="input-field col s6">
-                <input id="email" type="email" class="validate" name='email'>
-                <label for="email" data-error="Enter a valid Email address">Email</label>
-              </div>
-            </div>
-            <div class="input-field col s6">
-              <input id="password" type="password" class="validate" name='password'>
-              <label for="password">Password</label>
-            </div>
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
-          </form>
         </div>
 
-        <div class="modal-footer"></div>
       </div>
     </div>
-  </div>
-</div>
-
-
 
     <footer class="page-footer" id="myfooter">
       <div class="container">

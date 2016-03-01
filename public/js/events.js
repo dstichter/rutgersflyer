@@ -12,6 +12,11 @@ $(document).ready(function() {
     $('#modal2').openModal();
   });
 
+
+  $('#loginBUtton').on('click',function(){
+    $('#loginModal').openModal()
+  })
+
   $('.starHover').mouseenter( function(){
     var holdThis = $(this);
     $('.starHover').each(function(){
@@ -30,5 +35,6 @@ $(document).ready(function() {
   }).click(function(){
     $('.starHover').off();
   });
+
 
 });
